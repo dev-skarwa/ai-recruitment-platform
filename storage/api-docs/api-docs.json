@@ -1,0 +1,36 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "AI Recruitment Platform API Documentation",
+        "description": "API documentation for AI Recruitment Platform",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local API Server"
+        }
+    ],
+    "paths": {
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health Check API",
+                "operationId": "c873d7f3d9f52c19cd7a1b4bebfe02df",
+                "responses": {
+                    "200": {
+                        "description": "API is working"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Health",
+            "description": "Health"
+        }
+    ]
+}
