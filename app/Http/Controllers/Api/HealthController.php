@@ -9,7 +9,7 @@ use OpenApi\Attributes as OA;
 class HealthController extends Controller
 {
     #[OA\Get(
-        path: "/api/health",
+        path: "/api/v1/health",
         summary: "Health Check API",
         tags: ["Health"],
         responses: [
