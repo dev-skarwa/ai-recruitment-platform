@@ -13,10 +13,11 @@ class AuthService
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'password' => Hash::make($data['password']),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $tokenName = config('sanctum.token_name', 'auth_token');
+        $token = $user->createToken($tokenName)->plainTextToken;
 
         return [
             'user' => $user,
@@ -26,23 +27,15 @@ class AuthService
 
     public function login(array $data): ?array
     {
-
-        if (!Auth::attempt($data)) {
-            return null;
-        }
-
         $user = User::where('email', $data['email'])->first();
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
             return null;
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-        
-
         return [
             'user' => $user,
-            'token' => $token,
+            'token' => $user->createToken('auth_token')->plainTextToken,
         ];
     }
 }

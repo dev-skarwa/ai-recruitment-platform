@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'guard' => ['web'],
+    'guard' => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -50,7 +50,19 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => env('SANCTUM_TOKEN_EXPIRATION', null),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Token Rotation Strategy
+    |--------------------------------------------------------------------------
+    |
+    | When set, tokens will be rotated (invalidated and a new token issued) after
+    | the specified number of requests. Set to 0 or null to disable rotation.
+    |
+    */
+
+    'token_rotation' => env('SANCTUM_TOKEN_ROTATION', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,6 +78,8 @@ return [
     */
 
     'token_prefix' => env('SANCTUM_TOKEN_PREFIX', ''),
+
+    'token_name' => env('SANCTUM_TOKEN_NAME', 'auth_token'),
 
     /*
     |--------------------------------------------------------------------------

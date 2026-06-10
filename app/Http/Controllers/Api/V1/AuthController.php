@@ -9,6 +9,10 @@ use App\Traits\ApiResponseTrait;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -55,18 +59,30 @@ class AuthController extends Controller
             new OA\Response(
                 response: 201,
                 description: "User registered successfully"
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Validation failed"
             )
         ]
     )]
     public function register(RegisterRequest $request)
     {
-        $data = $this->authService->register($request->validated());
+        try {
+            $data = $this->authService->register($request->validated());
 
-        return $this->successResponse(
-            $data,
-            'User registered successfully',
-            201
-        );
+            return $this->successResponse(
+                $data,
+                'User registered successfully',
+                201
+            );
+        } catch (ValidationException $e) {
+            // Handle validation errors (e.g., email already exists)
+            return $this->errorResponse(
+                'Validation failed: ' . json_encode($e->validator->errors()->messages()),
+                422
+            );
+        }
     }
 
     #[OA\Post(
@@ -99,6 +115,10 @@ class AuthController extends Controller
             new OA\Response(
                 response: 401,
                 description: "Invalid credentials"
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Validation failed"
             )
         ]
     )]
@@ -133,21 +153,12 @@ class AuthController extends Controller
     )]
     public function logout(Request $request)
     {
-        $token = $request->user()?->currentAccessToken();
+        $request->user()->currentAccessToken()->delete();
 
-        if (!$token) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthenticated.',
-            ], 401);
-        }
-
-        $token->delete();
-
-        return $this->successResponse(
-            null,
-            'Logout successful'
-        );
+        return response()->json([
+            'success' => true,
+            'message' => 'Logout successful',
+        ]);
     }
 
     #[OA\Get(

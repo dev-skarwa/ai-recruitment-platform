@@ -70,6 +70,9 @@
                 "responses": {
                     "201": {
                         "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Validation failed"
                     }
                 }
             }
@@ -111,6 +114,9 @@
                     },
                     "401": {
                         "description": "Invalid credentials"
+                    },
+                    "422": {
+                        "description": "Validation failed"
                     }
                 }
             }
